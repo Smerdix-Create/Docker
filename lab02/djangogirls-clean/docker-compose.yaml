@@ -1,0 +1,24 @@
+services:
+  djangogirls:
+    build: .
+    container_name: djangogirls-container
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    volumes:
+      - djangogirls:/app/db
+    command: python3 manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  migrate:
+    build: .
+    container_name: djangogirls-migrate
+    volumes:
+      - djangogirls:/app/db
+    command: sh init.sh
+
+volumes:
+  djangogirls:
+    external: true
